@@ -1,8 +1,41 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 import '../settings/settings_view.dart';
 import 'sample_item.dart';
 import 'sample_item_details_view.dart';
+
+class Quest {
+  final String name;
+  final String complexity;
+  final List<String> tags;
+  final List<String> badges;
+
+  const Quest({
+    required this.name,
+    required this.complexity,
+    this.tags = const [],
+    this.badges = const [],
+  });
+
+  static Quest? fromJson(Map<String, dynamic> json) {
+    if (json
+        case {
+          "name": String name,
+          "complexity": String complexity,
+          // "tags": List<String> tags,
+          // "badges": List<String> badges,
+        }) {
+      return Quest(
+        name: name,
+        complexity: complexity,
+        // tags: tags,
+        // badges: badges,
+      );
+    }
+    return null;
+  }
+}
 
 /// Displays a list of SampleItems.
 class SampleItemListView extends StatelessWidget {
@@ -17,6 +50,14 @@ class SampleItemListView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final db = FirebaseFirestore.instance;
+    db.collection("quests").get().then((event) {
+      for (var doc in event.docs) {
+        print("${doc.id} => ${doc.data()}");
+        print(Quest.fromJson(doc.data()));
+      }
+    });
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Sample Items'),
@@ -49,21 +90,20 @@ class SampleItemListView extends StatelessWidget {
           final item = items[index];
 
           return ListTile(
-            title: Text('SampleItem ${item.id}'),
-            leading: const CircleAvatar(
-              // Display the Flutter Logo image asset.
-              foregroundImage: AssetImage('assets/images/flutter_logo.png'),
-            ),
-            onTap: () {
-              // Navigate to the details page. If the user leaves and returns to
-              // the app after it has been killed while running in the
-              // background, the navigation stack is restored.
-              Navigator.restorablePushNamed(
-                context,
-                SampleItemDetailsView.routeName,
-              );
-            }
-          );
+              title: Text('SampleItem ${item.id}'),
+              leading: const CircleAvatar(
+                // Display the Flutter Logo image asset.
+                foregroundImage: AssetImage('assets/images/flutter_logo.png'),
+              ),
+              onTap: () {
+                // Navigate to the details page. If the user leaves and returns to
+                // the app after it has been killed while running in the
+                // background, the navigation stack is restored.
+                Navigator.restorablePushNamed(
+                  context,
+                  SampleItemDetailsView.routeName,
+                );
+              });
         },
       ),
     );

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "470783734876",
+    "project_id": "personalcoach-5bebc",
+    "storage_bucket": "personalcoach-5bebc.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:470783734876:android:5daec3d4f5efcde5156299",
+        "android_client_info": {
+          "package_name": "com.actvst.bobagold.questi.questi"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA04-GQnpeLprhiIDbeEmn2moKobGpfrwc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

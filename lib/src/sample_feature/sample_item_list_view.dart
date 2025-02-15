@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:questi/src/images/carousel.dart';
 
 import '../settings/settings_view.dart';
 import 'sample_item.dart';
@@ -45,6 +46,7 @@ class SampleItemListView extends HookWidget {
   });
 
   static const routeName = '/';
+  final bool useCarousel = true;
 
   @override
   Widget build(BuildContext context) {
@@ -78,33 +80,39 @@ class SampleItemListView extends HookWidget {
         // building all Widgets up front, the ListView.builder constructor lazily
         // builds Widgets as they’re scrolled into view.
         body: items != null
-            ? ListView.builder(
-                // Providing a restorationId allows the ListView to restore the
-                // scroll position when a user leaves and returns to the app after it
-                // has been killed while running in the background.
-                restorationId: 'sampleItemListView',
-                itemCount: items.length,
-                itemBuilder: (BuildContext context, int index) {
-                  final item = items[index];
+            ? (useCarousel
+                ? ActivityCarousel(
+                    languageCode: 'ru',
+                    activities:
+                        items.map((e) => e?.name ?? 'Веселись').toList(),
+                  )
+                : ListView.builder(
+                    // Providing a restorationId allows the ListView to restore the
+                    // scroll position when a user leaves and returns to the app after it
+                    // has been killed while running in the background.
+                    restorationId: 'sampleItemListView',
+                    itemCount: items.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      final item = items[index];
 
-                  return ListTile(
-                      title: Text(item!.name),
-                      leading: const CircleAvatar(
-                        // Display the Flutter Logo image asset.
-                        foregroundImage:
-                            AssetImage('assets/images/flutter_logo.png'),
-                      ),
-                      onTap: () {
-                        // Navigate to the details page. If the user leaves and returns to
-                        // the app after it has been killed while running in the
-                        // background, the navigation stack is restored.
-                        Navigator.restorablePushNamed(
-                          context,
-                          SampleItemDetailsView.routeName,
-                        );
-                      });
-                },
-              )
+                      return ListTile(
+                          title: Text(item!.name),
+                          leading: const CircleAvatar(
+                            // Display the Flutter Logo image asset.
+                            foregroundImage:
+                                AssetImage('assets/images/flutter_logo.png'),
+                          ),
+                          onTap: () {
+                            // Navigate to the details page. If the user leaves and returns to
+                            // the app after it has been killed while running in the
+                            // background, the navigation stack is restored.
+                            Navigator.restorablePushNamed(
+                              context,
+                              SampleItemDetailsView.routeName,
+                            );
+                          });
+                    },
+                  ))
             : Center(child: CircularProgressIndicator()));
   }
 }

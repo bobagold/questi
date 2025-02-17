@@ -1,0 +1,19 @@
+[
+  {"badges":["турист"],"points":100,"complexity":"advanced","tags":["поход"],"frequency":"daily","name":"Зайти на самую высокую гору в окресностях"},
+  {"badges":["турист","гурман"],"points":50,"complexity":"medium","tags":["поход","еда"],"frequency":"weekends","name":"Позавтракать в кафе"},
+  {"badges":["спортсмен"],"points":75,"complexity":"hard","tags":["спорт","бег"],"frequency":"daily","name":"Пробежать 10 км"},
+  {"badges":["читатель"],"points":40,"complexity":"easy","tags":["чтение"],"frequency":"daily","name":"Прочитать 20 страниц книги"},
+  {"badges":["турист","исследователь"],"points":120,"complexity":"advanced","tags":["поход","природа"],"frequency":"monthly","name":"Исследовать новый лесной маршрут"},
+  {"badges":["спортсмен"],"points":60,"complexity":"medium","tags":["плавание"],"frequency":"weekly","name":"Проплыть 1 км в бассейне"},
+  {"badges":["гурман"],"points":30,"complexity":"easy","tags":["еда","готовка"],"frequency":"weekly","name":"Приготовить новое блюдо"},
+  {"badges":["музыкант"],"points":50,"complexity":"medium","tags":["музыка","инструмент"],"frequency":"daily","name":"Потренироваться 30 минут на музыкальном инструменте"},
+  {"badges":["турист","историк"],"points":80,"complexity":"medium","tags":["путешествие","история"],"frequency":"monthly","name":"Посетить историческое место"},
+  {"badges":["спортсмен","йога"],"points":45,"complexity":"easy","tags":["спорт","йога"],"frequency":"daily","name":"Практиковать йогу 15 минут"},
+  {"badges":["художник"],"points":55,"complexity":"medium","tags":["искусство","живопись"],"frequency":"weekly","name":"Нарисовать новую картину"},
+  {"badges":["спортсмен","турист"],"points":90,"complexity":"hard","tags":["поход","велосипед"],"frequency":"weekly","name":"Совершить велосипедную поездку на 50 км"},
+  {"badges":["социальный","общение"],"points":40,"complexity":"easy","tags":["друзья","разговор"],"frequency":"daily","name":"Позвонить старому другу и поговорить 10 минут"},
+  {"badges":["социальный","эксперт"],"points":70,"complexity":"medium","tags":["нетворкинг","мероприятие"],"frequency":"weekly","name":"Посетить общественное мероприятие и познакомиться с 3 новыми людьми"},
+  {"badges":["социальный","волонтёр"],"points":100,"complexity":"hard","tags":["благотворительность","помощь"],"frequency":"monthly","name":"Принять участие в волонтёрской программе"},
+  {"badges":["социальный","развитие"],"points":60,"complexity":"medium","tags":["дискуссия","новые знакомства"],"frequency":"weekly","name":"Принять участие в дискуссионном клубе или публичных дебатах"},
+  {"badges":["социальный","дружба"],"points":50,"complexity":"easy","tags":["друзья","отдых"],"frequency":"weekly","name":"Организовать встречу с друзьями офлайн"}
+]

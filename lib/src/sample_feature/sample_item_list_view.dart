@@ -1,5 +1,9 @@
+import 'dart:convert';
+import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:questi/src/images/carousel.dart';
 
@@ -12,12 +16,16 @@ class Quest {
   final String complexity;
   final List<String> tags;
   final List<String> badges;
+  final int points;
+  final String frequency;
 
   const Quest({
     required this.name,
     required this.complexity,
     this.tags = const [],
     this.badges = const [],
+    this.points = 0,
+    this.frequency = 'weekly',
   });
 
   static Quest? fromJson(Map<String, dynamic> json) {
@@ -25,17 +33,26 @@ class Quest {
         case {
           "name": String name,
           "complexity": String complexity,
-          // "tags": List<String> tags,
-          // "badges": List<String> badges,
+          "tags": List<dynamic> tags?,
+          "badges": List<dynamic> badges?,
+          "points": int points?,
+          "frequency": String frequency?,
         }) {
       return Quest(
         name: name,
         complexity: complexity,
-        // tags: tags,
-        // badges: badges,
+        tags: tags.cast<String>(),
+        badges: badges.cast<String>(),
+        points: points,
+        frequency: frequency,
       );
     }
     return null;
+  }
+
+  @override
+  String toString() {
+    return 'Quest{name: $name, complexity: $complexity, tags: $tags, badges: $badges, points: $points, frequency: $frequency}';
   }
 }
 
@@ -46,16 +63,25 @@ class SampleItemListView extends HookWidget {
   });
 
   static const routeName = '/';
-  final bool useCarousel = true;
+  final bool useFixtures = true;
 
   @override
   Widget build(BuildContext context) {
+    final useCarousel = useState(false);
     final db = FirebaseFirestore.instance;
-    final futureList = useMemoized(() => db.collection("quests").get().then(
-        (event) =>
-            event.docs.map((doc) => Quest.fromJson(doc.data())).toList()));
+    final futureList = useMemoized(() => !useFixtures
+        ? db.collection("quests").get().then((event) =>
+            event.docs.map((doc) => Quest.fromJson(doc.data())).toList())
+        : rootBundle
+            .loadString('assets/quests/fixture.json')
+            .then(jsonDecode)
+            .then((list) => list
+                .map((e) => Quest.fromJson(e))
+                .where((e) => e != null)
+                .toList()
+                .cast<Quest>()));
     final data = useFuture(futureList);
-    final items = data.data;
+    final List<Quest>? items = data.data;
 
     return Scaffold(
         appBar: AppBar(
@@ -72,6 +98,11 @@ class SampleItemListView extends HookWidget {
             ),
           ],
         ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () => useCarousel.value = !useCarousel.value,
+          child:
+              Icon(useCarousel.value ? Icons.view_list : Icons.view_carousel),
+        ),
 
         // To work with lists that may contain a large number of items, it’s best
         // to use the ListView.builder constructor.
@@ -80,7 +111,7 @@ class SampleItemListView extends HookWidget {
         // building all Widgets up front, the ListView.builder constructor lazily
         // builds Widgets as they’re scrolled into view.
         body: items != null
-            ? (useCarousel
+            ? (useCarousel.value
                 ? ActivityCarousel(
                     languageCode: 'ru',
                     activities:
@@ -97,11 +128,12 @@ class SampleItemListView extends HookWidget {
 
                       return ListTile(
                           title: Text(item!.name),
-                          leading: const CircleAvatar(
-                            // Display the Flutter Logo image asset.
-                            foregroundImage:
-                                AssetImage('assets/images/flutter_logo.png'),
+                          leading: CircleAvatar(
+                            child: Icon(randomIconByTags(item.tags)),
                           ),
+                          subtitle:
+                              Text(item.tags.map((tag) => '#$tag').join(' ')),
+                          trailing: Text(item.points.toString()),
                           onTap: () {
                             // Navigate to the details page. If the user leaves and returns to
                             // the app after it has been killed while running in the
@@ -115,4 +147,39 @@ class SampleItemListView extends HookWidget {
                   ))
             : Center(child: CircularProgressIndicator()));
   }
+}
+
+const _byTag = {
+  "поход": Icons.hiking,
+  "спорт": Icons.fitness_center,
+  "бег": Icons.directions_run,
+  "чтение": Icons.local_library,
+  "природа": Icons.park,
+  "плавание": Icons.pool,
+  "еда": Icons.fastfood,
+  "готовка": Icons.restaurant,
+  "музыка": Icons.music_note,
+  "инструмент": Icons.piano,
+  "путешествие": Icons.flight,
+  "история": Icons.history_edu,
+  "йога": Icons.self_improvement,
+  "искусство": Icons.brush,
+  "живопись": Icons.palette,
+  "велосипед": Icons.directions_bike,
+  "общение": Icons.groups,
+  "нетворкинг": Icons.handshake,
+  "мероприятие": Icons.event,
+  "благотворительность": Icons.volunteer_activism,
+  "дискуссия": Icons.record_voice_over,
+  "разговор": Icons.forum,
+  "друзья": Icons.people,
+  "отдых": Icons.spa,
+};
+final _random = Random();
+IconData randomIconByTags(List<String> tags) {
+  final availableIcons =
+      tags.map((tag) => _byTag[tag]).whereType<IconData>().toList();
+  return availableIcons.isNotEmpty
+      ? availableIcons[_random.nextInt(availableIcons.length)]
+      : Icons.help_outline;
 }

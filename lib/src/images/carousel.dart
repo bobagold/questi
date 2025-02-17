@@ -1,19 +1,41 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:questi/src/activities/activity_status.dart';
+import 'package:questi/src/http/http_repository.dart';
+
+class ActivityCarouselLoader extends ConsumerWidget {
+  final List<String> activities;
+  final String? languageCode;
+  const ActivityCarouselLoader({
+    super.key,
+    required this.activities,
+    this.languageCode,
+  });
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return ActivityCarousel(
+      activities: activities,
+      languageCode: languageCode,
+      client: ref.watch(httpRepositoryProvider),
+    );
+  }
+}
 
 class ActivityCarousel extends HookWidget {
   final List<String> activities;
   final String? languageCode;
+  final http.Client client;
 
   const ActivityCarousel({
     super.key,
     required this.activities,
     this.languageCode,
+    required this.client,
   });
 
   @override
@@ -30,7 +52,7 @@ class ActivityCarousel extends HookWidget {
       }
 
       for (String activity in activities) {
-        final response = await http.get(
+        final response = await client.get(
           Uri.parse(
               //    'https://api.imagga.com/v2/categories/personal_photos?language=$languageCode&search=$activity'),
               'https://pixabay.com/api/?key=$apiKey&q=$activity&image_type=photo&lang=$languageCode&per_page=10'),

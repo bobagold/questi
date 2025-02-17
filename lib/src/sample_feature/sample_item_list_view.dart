@@ -112,7 +112,7 @@ class SampleItemListView extends HookWidget {
         // builds Widgets as they’re scrolled into view.
         body: items != null
             ? (useCarousel.value
-                ? ActivityCarousel(
+                ? ActivityCarouselLoader(
                     languageCode: 'ru',
                     activities:
                         items.map((e) => e?.name ?? 'Веселись').toList(),

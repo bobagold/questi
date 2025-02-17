@@ -4,6 +4,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:questi/src/activities/activity_status.dart';
 
 class ActivityCarousel extends HookWidget {
   final List<String> activities;
@@ -106,6 +107,7 @@ class ActivityCarousel extends HookWidget {
                         ),
                       ),
                     ),
+                    ActivityStatus(activityName: activity),
                   ],
                 ),
               );

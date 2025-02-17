@@ -5,56 +5,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:questi/src/images/carousel.dart';
 
+import '../images/carousel.dart';
 import '../settings/settings_view.dart';
-import 'sample_item.dart';
-import 'sample_item_details_view.dart';
-
-class Quest {
-  final String name;
-  final String complexity;
-  final List<String> tags;
-  final List<String> badges;
-  final int points;
-  final String frequency;
-
-  const Quest({
-    required this.name,
-    required this.complexity,
-    this.tags = const [],
-    this.badges = const [],
-    this.points = 0,
-    this.frequency = 'weekly',
-  });
-
-  static Quest? fromJson(Map<String, dynamic> json) {
-    if (json
-        case {
-          "name": String name,
-          "complexity": String complexity,
-          "tags": List<dynamic> tags?,
-          "badges": List<dynamic> badges?,
-          "points": int points?,
-          "frequency": String frequency?,
-        }) {
-      return Quest(
-        name: name,
-        complexity: complexity,
-        tags: tags.cast<String>(),
-        badges: badges.cast<String>(),
-        points: points,
-        frequency: frequency,
-      );
-    }
-    return null;
-  }
-
-  @override
-  String toString() {
-    return 'Quest{name: $name, complexity: $complexity, tags: $tags, badges: $badges, points: $points, frequency: $frequency}';
-  }
-}
+import 'quest.dart';
+import 'quest_details_view.dart';
 
 /// Displays a list of SampleItems.
 class SampleItemListView extends HookWidget {
@@ -114,8 +69,7 @@ class SampleItemListView extends HookWidget {
             ? (useCarousel.value
                 ? ActivityCarouselLoader(
                     languageCode: 'ru',
-                    activities:
-                        items.map((e) => e?.name ?? 'Веселись').toList(),
+                    activities: items,
                   )
                 : ListView.builder(
                     // Providing a restorationId allows the ListView to restore the
@@ -127,7 +81,7 @@ class SampleItemListView extends HookWidget {
                       final item = items[index];
 
                       return ListTile(
-                          title: Text(item!.name),
+                          title: Text(item.name),
                           leading: CircleAvatar(
                             child: Icon(randomIconByTags(item.tags)),
                           ),

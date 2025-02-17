@@ -5,11 +5,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:questi/src/activities/activity_status.dart';
-import 'package:questi/src/http/http_repository.dart';
+
+import '../activities/activity_status.dart';
+import '../http/http_repository.dart';
+import '../quests/quest.dart';
 
 class ActivityCarouselLoader extends ConsumerWidget {
-  final List<String> activities;
+  final List<Quest> activities;
   final String? languageCode;
   const ActivityCarouselLoader({
     super.key,
@@ -27,7 +29,7 @@ class ActivityCarouselLoader extends ConsumerWidget {
 }
 
 class ActivityCarousel extends HookWidget {
-  final List<String> activities;
+  final List<Quest> activities;
   final String? languageCode;
   final http.Client client;
 
@@ -48,14 +50,14 @@ class ActivityCarousel extends HookWidget {
       Map<String, String> activityImages = {};
       if (apiKey.isEmpty) {
         return Map.fromEntries(activities.map((activity) =>
-            MapEntry(activity, 'https://via.placeholder.com/150')));
+            MapEntry(activity.key, 'https://via.placeholder.com/150')));
       }
 
-      for (String activity in activities) {
+      for (final activity in activities) {
         final response = await client.get(
           Uri.parse(
               //    'https://api.imagga.com/v2/categories/personal_photos?language=$languageCode&search=$activity'),
-              'https://pixabay.com/api/?key=$apiKey&q=$activity&image_type=photo&lang=$languageCode&per_page=10'),
+              'https://pixabay.com/api/?key=$apiKey&q=${activity.search}&image_type=photo&lang=$languageCode&per_page=10'),
           // headers: {
           //   'Authorization':
           //       'Basic ${base64Encode(utf8.encode('$apiKey:$apiSecret'))}',
@@ -64,17 +66,14 @@ class ActivityCarousel extends HookWidget {
 
         if (response.statusCode == 200) {
           final data = json.decode(response.body);
-          print(data);
           if (data['hits'].isNotEmpty) {
-            activityImages[activity] = data['hits'][0]['webformatURL'];
+            activityImages[activity.key] = data['hits'][0]['webformatURL'];
           } else {
-            activityImages[activity] =
+            activityImages[activity.key] =
                 'https://via.placeholder.com/150'; // Fallback image
           }
         } else {
-          print(response.statusCode);
-          print(response.body);
-          activityImages[activity] =
+          activityImages[activity.key] =
               'https://via.placeholder.com/150'; // Fallback image
         }
       }
@@ -110,7 +109,7 @@ class ActivityCarousel extends HookWidget {
                   children: [
                     Expanded(
                       child: CachedNetworkImage(
-                        imageUrl: activityImages[activity]!,
+                        imageUrl: activityImages[activity.key]!,
                         fit: BoxFit.cover,
                         width: double.infinity,
                         placeholder: (context, url) =>
@@ -122,14 +121,14 @@ class ActivityCarousel extends HookWidget {
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Text(
-                        activity,
+                        activity.displayName,
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                     ),
-                    ActivityStatus(activityName: activity),
+                    ActivityStatus(quest: activity),
                   ],
                 ),
               );

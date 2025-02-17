@@ -7,7 +7,7 @@ part of 'user_activity_repository.dart';
 // **************************************************************************
 
 String _$userActivityCollectorHash() =>
-    r'4ba14aa0d2b46ca1eef6dfdf61a4222d74ae2c18';
+    r'3ca835e5e58184d94e7dbd8e6dfa0d666fde7487';
 
 /// See also [UserActivityCollector].
 @ProviderFor(UserActivityCollector)

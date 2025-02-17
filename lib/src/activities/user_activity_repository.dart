@@ -1,27 +1,30 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../quests/quest.dart';
+
 part 'user_activity_repository.g.dart';
 
 enum UserAction { accepted, completed }
 
-typedef UserActivity = (String, UserAction);
+typedef UserActivity = (Quest, UserAction);
 
 @riverpod
 class UserActivityCollector extends _$UserActivityCollector {
   @override
   List<UserActivity> build() => [];
 
-  void accept(String activityName) {
+  void accept(Quest quest) {
     state = [
       ...state,
-      (activityName, UserAction.accepted),
+      (quest, UserAction.accepted),
     ];
   }
 
-  void complete(String activityName) {
+  void complete(Quest quest) {
     state = state.map((activity) {
-      if (activity.$1 == activityName && activity.$2 == UserAction.accepted) {
-        return (activityName, UserAction.completed);
+      if (activity.$1.name == quest.name &&
+          activity.$2 == UserAction.accepted) {
+        return (quest, UserAction.completed);
       }
       return activity;
     }).toList();

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:questi/src/http/http_repository.dart';
 
+import 'src/http/http_repository.dart';
 import 'firebase_options.dart';
 import 'src/app.dart';
 import 'src/settings/settings_controller.dart';

@@ -47,4 +47,26 @@ class Quest {
   String toString() {
     return 'Quest{name: $name, complexity: $complexity, tags: $tags, badges: $badges, points: $points, frequency: $frequency}';
   }
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is Quest &&
+          runtimeType == other.runtimeType &&
+          name == other.name &&
+          complexity == other.complexity &&
+          tags == other.tags &&
+          badges == other.badges &&
+          points == other.points &&
+          frequency == other.frequency;
+
+  @override
+  int get hashCode {
+    return name.hashCode ^
+        complexity.hashCode ^
+        tags.hashCode ^
+        badges.hashCode ^
+        points.hashCode ^
+        frequency.hashCode;
+  }
 }

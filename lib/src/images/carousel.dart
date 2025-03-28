@@ -42,7 +42,7 @@ class ActivityCarousel extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final apiKey = String.fromEnvironment('PIXABAY_API_KEY');
+    final apiKey = const String.fromEnvironment('PIXABAY_API_KEY');
     final languageCode =
         this.languageCode ?? Localizations.localeOf(context).languageCode;
 

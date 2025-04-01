@@ -12,24 +12,15 @@ class ActivityStatus extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final activities = ref.watch(userActivityCollectorProvider);
-    final activity = activities.firstWhere(
-      (a) => a.$1.name == quest.name,
-      orElse: () => (
-        Quest(
-          name: '',
-          complexity: '',
-        ),
-        UserAction.accepted
-      ),
-    );
+    final status = activities.find(quest).$2;
 
-    return activity.$1.name == ''
+    return status == null
         ? OutlinedButton(
             onPressed: () =>
                 ref.read(userActivityCollectorProvider.notifier).accept(quest),
             child: const Text("Принять"),
           )
-        : activity.$2 == UserAction.accepted
+        : status == UserAction.accepted
             ? ElevatedButton(
                 onPressed: () => ref
                     .read(userActivityCollectorProvider.notifier)

@@ -94,8 +94,8 @@ class ActivityCarousel extends HookWidget {
         options: CarouselOptions(
           height: 200,
           enlargeCenterPage: true,
-          enableInfiniteScroll: true,
-          autoPlay: true,
+          enableInfiniteScroll: false,
+          autoPlay: false,
         ),
         items: activities.map((activity) {
           return Builder(

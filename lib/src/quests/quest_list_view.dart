@@ -6,8 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
-import '../images/carousel.dart';
 import '../settings/settings_view.dart';
+import 'dashboard.dart';
 import 'quest.dart';
 import 'quest_details_view.dart';
 
@@ -67,10 +67,7 @@ class SampleItemListView extends HookWidget {
         // builds Widgets as they’re scrolled into view.
         body: items != null
             ? (useCarousel.value
-                ? ActivityCarouselLoader(
-                    languageCode: 'ru',
-                    activities: items,
-                  )
+                ? Dashboard(items: items)
                 : ListView.builder(
                     // Providing a restorationId allows the ListView to restore the
                     // scroll position when a user leaves and returns to the app after it
